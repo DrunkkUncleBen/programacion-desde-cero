@@ -4,9 +4,59 @@ import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import './App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
+function Personaje({ nombre, vida, ataque, atacar }) {
+  return (
+    <div>
+      <h1>{nombre}</h1>
+      <p>Vida: {vida}</p>
+      <p>Ataque: {ataque}</p>
 
+      <button onClick={atacar}>
+        Atacar
+      </button>
+    </div>
+  )
+}
+
+function App() {
+  const [count, setCount] = useState(10)
+  const [vidaGuerrero, setVidaGuerrero] = useState(100)
+  const [vidaMago, setVidaMago] = useState(80)
+  const [vidaArquero, setVidaArquero] = useState(90)
+
+  const [mensajeGuerrero, setMensajeGuerrero] = useState('')
+  const [mensajeMago, setMensajeMago] = useState('')
+  const [mensajeArquero, setMensajeArquero] = useState('')
+
+  function atacarMago() {
+    if (vidaMago <= 0) {
+      setMensajeMago("Mago ya está derrotado")
+      return
+    } else {
+      setVidaMago(vidaMago - 20)
+      setMensajeMago("Guerrero atacó a Mago")
+    }
+  }
+
+  function atacarArquero() {
+    if (vidaArquero <= 0) {
+      setMensajeArquero("Arquero ya está derrotado")
+      return
+    } else {
+      setVidaArquero(vidaArquero - 15)
+      setMensajeArquero("Mago atacó a Arquero")
+    }
+  }
+
+  function atacarGuerrero() {
+    if (vidaGuerrero <= 0) {
+      setMensajeGuerrero("Guerrero ya está derrotado")
+      return
+    } else {
+      setVidaGuerrero(vidaGuerrero - 25)
+      setMensajeGuerrero("Arquero atacó a Guerrero")
+    }
+  }
   return (
     <>
       <section id="center">
@@ -16,7 +66,16 @@ function App() {
           <img src={viteLogo} className="vite" alt="Vite logo" />
         </div>
         <div>
-          <h1>Get started</h1>
+          <h1>Mi primer proyecto en React</h1>
+          <p>Estoy aprendiendo React</p>
+          <Personaje nombre="Guerrero" vida={vidaGuerrero} ataque={20} atacar={atacarGuerrero} />
+          <p>{mensajeGuerrero}</p>
+          <Personaje nombre="Mago" vida={vidaMago} ataque={15} atacar={atacarMago} />
+          <p>{mensajeMago}</p>
+          <Personaje nombre="Arquero" vida={vidaArquero} ataque={25} atacar={atacarArquero} />
+          <p>{mensajeArquero}</p>
+
+          <button>Haz clic</button>
           <p>
             Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
           </p>
