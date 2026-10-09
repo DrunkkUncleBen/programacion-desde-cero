@@ -25,10 +25,10 @@ function App() {
   const [mensajeArquero, setMensajeArquero] = useState('')
 
   const [personajes, setPersonajes] = useState([
-    { nombre: "Guerrero", vida: 100, ataque: 20 },
-    { nombre: "Mago", vida: 80, ataque: 15 },
-    { nombre: "Arquero", vida: 90, ataque: 25 },
-    { nombre: "Ladron", vida: 70, ataque: 30 }
+    { nombre: "Guerrero", vida: 100, ataque: 20, mensaje: ""},
+    { nombre: "Mago", vida: 80, ataque: 15, mensaje: ""},
+    { nombre: "Arquero", vida: 90, ataque: 25, mensaje: ""},
+    { nombre: "Ladron", vida: 70, ataque: 30, mensaje: ""}
   ])
 
   function atacarMago() {
@@ -52,6 +52,24 @@ function App() {
         }
         return personaje
       }))
+  }
+
+  function atacarPersonaje(nombrePersonaje, damage) {
+    setPersonajes(personajes.map(
+      function (personaje) {
+        if (personaje.nombre === nombrePersonaje) {
+          const nuevaVida = Math.max(0, personaje.vida - damage)
+          return {
+            ...personaje,
+            vida: nuevaVida,
+            mensaje: nuevaVida === 0
+              ? "Personaje está derrotado"
+              : "Personaje atacado, vida restante: " + nuevaVida
+          }
+        }
+        return personaje
+      }
+    ))
   }
 
 
@@ -106,20 +124,33 @@ function App() {
 
       <h2>Lista de personajes</h2>
 
-      <div>
-        {personajes.map(function (personaje) {
-          return (
+      {personajes.map(function (personaje) {
+        let objetivo = ""
+
+        if (personaje.nombre === "Guerrero") {
+          objetivo = "Mago"
+        } else if (personaje.nombre === "Mago") {
+          objetivo = "Arquero"
+        } else if (personaje.nombre === "Arquero") {
+          objetivo = "Guerrero"
+  }
+        return (
+          <div key={personaje.nombre}>
             <Personaje
-              key={personaje.nombre}
               nombre={personaje.nombre}
               vida={personaje.vida}
               ataque={personaje.ataque}
-
-              atacar={personaje.nombre === "Guerrero" ? atacarMago : personaje.nombre === "Mago" ? atacarArquero : atacarGuerrero}
+              atacar={() => atacarPersonaje(personaje.nombre, personaje.ataque)}           
             />
-          )
-        })}
-      </div>
+            <p>{personaje.mensaje}</p>
+            {personaje.nombre === "Mago" && (
+              <button onClick={atacarMagoArray}>
+                Probar ataque con array
+              </button>
+            )}
+          </div>
+        )
+      })}
     </>
   )
 }
