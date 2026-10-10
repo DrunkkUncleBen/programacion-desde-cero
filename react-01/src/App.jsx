@@ -54,10 +54,13 @@ function App() {
       }))
   }
 
-  function atacarPersonaje(nombrePersonaje, damage) {
+  function atacarPersonaje(objetivo, damage) {
     setPersonajes(personajes.map(
       function (personaje) {
-        if (personaje.nombre === nombrePersonaje) {
+        if (personaje.nombre === objetivo) {
+          if (personaje.vida === 0) {
+            return personaje
+          }
           const nuevaVida = Math.max(0, personaje.vida - damage)
           return {
             ...personaje,
@@ -133,16 +136,19 @@ function App() {
           objetivo = "Arquero"
         } else if (personaje.nombre === "Arquero") {
           objetivo = "Guerrero"
-  }
+        } else if (personaje.nombre === "Ladron") {
+          objetivo = "Guerrero"       
+      }
         return (
           <div key={personaje.nombre}>
             <Personaje
               nombre={personaje.nombre}
               vida={personaje.vida}
               ataque={personaje.ataque}
-              atacar={() => atacarPersonaje(personaje.nombre, personaje.ataque)}           
+              atacar={() => atacarPersonaje(objetivo, personaje.ataque)}           
             />
             <p>{personaje.mensaje}</p>
+            <p>Objetivo: {objetivo}</p>
             {personaje.nombre === "Mago" && (
               <button onClick={atacarMagoArray}>
                 Probar ataque con array
